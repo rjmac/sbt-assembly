@@ -164,7 +164,14 @@ object Plugin extends sbt.Plugin {
       out
     }
 
-  private def assemblyExcludedFiles(bases: Seq[File]): Seq[File] = Nil  
+  private def assemblyExcludedFiles(bases: Seq[File]): Seq[File] = {
+    bases.flatMap { base =>
+      (base / "META-INF" * "*").get.filter { file =>
+        val name = file.name.toLowerCase
+        name.endsWith(".sf") || name.endsWith(".dsa")
+      }
+    }
+  }
   private def sha1 = MessageDigest.getInstance("SHA-1")
   private def sha1content(f: File) = sha1.digest(IO.readBytes(f)).toSeq
 
@@ -265,8 +272,6 @@ object Plugin extends sbt.Plugin {
       case inf if inf.startsWith("META-INF/") =>
         inf.slice("META-INF/".size, inf.size).toLowerCase match {
           case "manifest.mf" | "index.list" | "dependencies" =>
-            MergeStrategy.discard
-          case n if n.endsWith(".sf") || n.endsWith(".dsa") =>
             MergeStrategy.discard
           case n if n startsWith "plexus/" =>
             MergeStrategy.discard
