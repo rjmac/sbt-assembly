@@ -150,7 +150,7 @@ object Plugin extends sbt.Plugin {
         case (name, files) =>
           val strategy = strats(name)
           if (strategy != MergeStrategy.rename) {
-            if ((files.size > 1) || (strategy != MergeStrategy.deduplicate)) {
+            if ((files.size > 1) && (strategy != MergeStrategy.deduplicate)) {
               log.info("Merging '%s' with strategy '%s'".format(name, strategy.name))
             }
             strategy.apply((tempDir, name, files map (_._1))) match {
