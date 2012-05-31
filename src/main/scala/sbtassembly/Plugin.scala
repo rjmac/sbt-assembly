@@ -240,14 +240,14 @@ object Plugin extends sbt.Plugin {
       (key.? zipWith rhs)( (x,y) => (x :^: y :^: KNil) map Scoped.hf2( _ getOrElse _ ))
   }
 
-  private val LicenseFile = """(\w+\/)*(license|licence|notice|copying)([.]\w+)?$""".r
+  private val LicenseFile = """(.*/)?(license|licence|notice|copying)([.]\w+)?$""".r
   private def isLicenseFile(fileName: String): Boolean =
     fileName.toLowerCase match {
       case LicenseFile(x, y, z) => true
       case _ => false
     }
 
-  private val ReadMe = """(\w+\/)*(readme)([.]\w+)?$""".r
+  private val ReadMe = """(.*/)?(readme)([.]\w+)?$""".r
   private def isReadme(fileName: String): Boolean =
     fileName.toLowerCase match {
       case ReadMe(x, y, z) => true
